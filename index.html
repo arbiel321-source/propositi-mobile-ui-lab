@@ -35,6 +35,8 @@ let pendingIssue=null;
 function confirmIssue(){if(!pendingIssue)return;const t=toolStock.find(t=>t.id===pendingIssue.tool);if(pendingIssue.qty>t.available)return;t.available-=pendingIssue.qty;issues.push({...pendingIssue});pendingIssue=null;toolView='issued';showTools()}
 function returnTool(n){const i=issues[n],t=toolStock.find(t=>t.id===i.tool);toolSheet('Return tool',`<h2>${t.name}</h2><p>Issued to ${esc(i.person)} · ${i.qty} units</p><label>Quantity to return<input class="field" id="returnQty" type="number" min="1" max="${i.qty}" step="1" value="${i.qty}" inputmode="numeric"></label><p id="returnError" role="alert" style="color:#a32626"></p><button class="btn primary" onclick="confirmReturn(${n})">Confirm demo return</button>`)}
 function confirmReturn(n){const i=issues[n],q=Number(document.getElementById('returnQty').value);if(!Number.isInteger(q)||q<1||q>i.qty){document.getElementById('returnError').textContent='Enter a whole quantity from 1 to '+i.qty+'.';return}toolStock.find(t=>t.id===i.tool).available+=q;i.qty-=q;if(!i.qty)issues.splice(n,1);showTools()}
+const woTab=tab;
+tab=function(t){if(!document.getElementById('content')){closeSheet();document.querySelector('main').innerHTML=woMain}woTab(t)};
 if(location.hash==='#tools')showTools();
 </script>
 </body></html>
